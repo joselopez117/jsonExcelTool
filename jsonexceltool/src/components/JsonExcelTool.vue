@@ -6,6 +6,7 @@ const rows = ref([]);
 const rawJsonString = ref("");
 const counter = ref(0);
 const hasError = ref(false);
+const fileUpload = ref();
 
 function getFlatObject(object) {
   function iter(o, p) {
@@ -45,6 +46,19 @@ function jsonToExcelFile() {
   }
   counter.value++;
 }
+
+//filter excel file then export to json
+function excelToJsonText() {
+  try {
+    //parse excel file into strings
+    fileUpload.value.click();
+    hasError.value = false;
+  } catch (error) {
+    console.log(error);
+    hasError.value = true;
+  }
+  counter.value++;
+}
 </script>
 
 <template>
@@ -67,9 +81,10 @@ function jsonToExcelFile() {
       </div>
       <div class="text-and-buttons__buttons">
         <button @click="jsonToExcelFile">Convert Json to Excel</button>
-        <button>Convert Excel to Json</button>
+        <button @click="excelToJsonText">Convert Excel to Json</button>
       </div>
     </div>
+    <input type="file" ref="fileUpload" class="file-upload" />
   </div>
 </template>
 
@@ -105,6 +120,7 @@ function jsonToExcelFile() {
 
   .text-and-buttons__text {
     width: max-content;
+
     .json-text-area {
       justify-content: center;
       min-width: 20%;
@@ -113,6 +129,7 @@ function jsonToExcelFile() {
       height: 10rem;
       width: 39.6rem;
       resize: vertical;
+
       textarea {
         &::placeholder {
           font-style: italic;
@@ -135,6 +152,10 @@ function jsonToExcelFile() {
     display: flex;
     flex-direction: row;
     width: auto;
+  }
+
+  .file-upload {
+    display: none;
   }
 }
 </style>
