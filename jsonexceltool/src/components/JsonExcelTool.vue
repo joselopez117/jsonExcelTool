@@ -1,6 +1,6 @@
 <script setup>
 import { reactive, ref, onMounted } from "vue";
-import { read, utils, writeFileXLSX } from "xlsx";
+import { read, readFile, utils, writeFileXLSX } from "xlsx";
 
 const rows = ref([]);
 const rawJsonString = ref("");
@@ -52,7 +52,14 @@ function excelToJsonText() {
   try {
     //parse excel file into strings
     fileUpload.value.click();
-    hasError.value = false;
+    if(fileUpload.value.files.length > 0 && fileUpload.value.files.length == 1){
+      const uploadFile = fileUpload.value.files[0];
+      const formData = new FormData();
+      formData.append('file', uploadFile);
+      const wb = readFile(formData.get("file"));
+      console.log(wb);
+      hasError.value = false;
+    }
   } catch (error) {
     console.log(error);
     hasError.value = true;
