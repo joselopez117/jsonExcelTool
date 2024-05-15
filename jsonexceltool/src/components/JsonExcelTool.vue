@@ -48,16 +48,21 @@ function jsonToExcelFile() {
 }
 
 //filter excel file then export to json
-function excelToJsonText() {
+async function excelToJsonText() {
   try {
     //parse excel file into strings
     fileUpload.value.click();
-    if(fileUpload.value.files.length > 0 && fileUpload.value.files.length == 1){
-      const uploadFile = fileUpload.value.files[0];
-      const formData = new FormData();
-      formData.append('file', uploadFile);
-      const wb = readFile(formData.get("file"));
+    if (fileUpload.value.files.length == 1) {
+      const file = fileUpload.value.files[0];
+      const data = await file.arrayBuffer();
+      const wb = readFile(data, { type: "array" });
+
+      for (let i = 0; i < wb.Sheets.length; i++) {
+        console.log(wb.Sheets[i]);
+      }
+
       console.log(wb);
+      //after getting wb parse the ws and parse it into a json
       hasError.value = false;
     }
   } catch (error) {
